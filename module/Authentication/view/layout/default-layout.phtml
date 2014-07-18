@@ -1,0 +1,255 @@
+<?php echo $this->doctype(); ?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <!-- http://davidbcalhoun.com/2010/viewport-metatag -->
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <?php
+        echo $this->headMeta()
+                ->appendName('viewport', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
+                ->appendHttpEquiv('X-UA-Compatible', 'IE=edge');
+       
+        echo $this->headTitle($this->translate('TFD - Global'))->setSeparator(' - ')->setAutoEscape(false);
+        ?>
+
+        <!-- ******** DO NOT REMOVE OR CHANGE ORDER OF THE FOLLOWING ******* -->
+        <?php
+        $this->headLink()
+                ->appendStylesheet($this->basePath() . '/theme/css/bootstrap.min.css')
+                ->appendStylesheet($this->basePath() . '/theme/css/font-awesome.min.css?v=1')
+                ->appendStylesheet($this->basePath() . '/theme/css/cus-icons.css?v=1')
+                ->appendStylesheet($this->basePath() . '/theme/css/uniform.default.css?v=1')
+                ->appendStylesheet($this->basePath() . '/theme/css/select2.css?v=1')
+                ->appendStylesheet($this->basePath() . '/theme/css/theme.css?v=1')
+                ->appendStylesheet($this->basePath() . '/theme/css/theme-responsive.css?v=1')
+                ->appendStylesheet($this->basePath() . '/theme/css/themes/default.css?v=1')
+                ->appendStylesheet($this->basePath() . '/theme/css/full-width.css?v=1')
+                ->appendStylesheet('http://fonts.googleapis.com/css?family=Lato:300,400,700')
+                ->appendStylesheet($this->basePath() . '/theme/css/override.css');
+        ?>
+
+        <!-- All javascripts are located at the bottom except for HTML5 Shim -->
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <?php
+        echo $this->headScript()
+                ->prependFile('http://html5shim.googlecode.com/svn/trunk/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+                ->prependFile($this->basePath() . '/js/include/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',));
+        ?>
+
+        <?php
+        $this->headLink(array('rel' => 'shortcut icon', 'href' => $this->basePath() .'/theme/img/favicon.png'));
+        $this->headLink(array('rel' => 'shortcut icon', 'href' => $this->basePath() .'/theme/img/favicon.ico'));
+        $this->headLink(array('rel' => 'apple-touch-icon-precomposed', 'href' => $this->basePath() .'/theme/img/favicons/apple-touch-icon-retina.png', 'sizes' => '114x114')); /* For retina screens */
+        $this->headLink(array('rel' => 'apple-touch-icon-precomposed', 'href' => $this->basePath() .'/theme/img/favicons/apple-touch-icon-ipad.png', 'sizes' => '72x72')); /* For iPad 1 */
+        $this->headLink(array('rel' => 'apple-touch-icon-precomposed', 'href' => $this->basePath() .'/theme/img/favicons/apple-touch-icon-ipad.png')); /* For iPhone 3G, iPod Touch and Android */
+        ?>
+
+        <!--  iOS web-app metas -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <!-- Add your custom home screen title: -->
+        <meta name="apple-mobile-web-app-title" content="TFD - Global"> 
+
+        <!-- Startup image for web apps -->
+        <?php
+        $this->headLink(array('rel' => 'apple-touch-startup-image', 'href' => $this->basePath() .'/theme/img/splash/ipad-landscape.png', 'media' => 'screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)'));
+        $this->headLink(array('rel' => 'apple-touch-startup-image', 'href' => $this->basePath() .'/theme/img/splash/ipad-portrait.png', 'media' => 'screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)'));
+        $this->headLink(array('rel' => 'apple-touch-startup-image', 'href' => $this->basePath() .'/theme/img/splash/iphone.png', 'media' => 'screen and (max-device-width: 320px)'));
+        echo $this->headLink();
+        ?>
+
+    </head>
+
+
+    <body>
+        <!-- .height-wrapper -->
+        <div class="height-wrapper">
+
+            <!-- header -->
+            <header>
+                <!-- tool bar -->
+                <div id="header-toolbar" class="container-fluid">
+                    <!-- .contained -->
+                    <div class="contained">
+
+                        <!-- theme name -->
+                        <h1> <span class="hidden-xs">TFD - Global</span> </h1>
+                        <!-- end theme name -->
+
+                        <!-- span4 -->
+                        <div class="pull-right">
+                            <!-- demo theme switcher-->
+                            <div id="theme-switcher" class="btn-toolbar">
+
+                                <!-- search and log off button for phone devices -->
+                                <div class="btn-group pull-right visible-xs">
+                                    <a href="javascript:void(0)" class="btn btn-inverse btn-sm"><i class="icon-search"></i></a>
+                                    <a href="login.html" class="btn btn-inverse btn-sm"><i class="icon-off"></i></a>
+                                </div>
+                                <!-- end buttons for phone device -->
+                            </div>
+                            <!-- end demo theme switcher-->
+                        </div>
+                        <!-- end span4 -->
+                    </div>
+                    <!-- end .contained -->
+                </div>
+                <!-- end tool bar -->
+
+            </header>
+            <!-- end header -->	
+
+            <?php echo $this->content; ?>
+
+
+        </div>
+        <!-- end .height-wrapper -->	
+
+        <!-- footer -->
+
+        <!-- if you like you can insert your footer here -->
+
+        <!-- end footer -->
+
+        <!--================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+
+        <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/theme/js/libs/jquery.min.js"><\/script>')</script>
+        <!-- OPTIONAL: Use this migrate scrpit for plugins that are not supported by jquery 1.9+ -->
+                <!-- DISABLED <script src="/theme/js/libs/jquery.migrate-1.0.0.min.js"></script> -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+        <script>window.jQuery.ui || document.write('<script src="/theme/js/libs/jquery.ui.min.js"><\/script>')</script>
+
+        <!-- IMPORTANT: Jquery Touch Punch is always placed under Jquery UI -->
+        <script src="/theme/js/include/jquery.ui.touch-punch.min.js"></script>
+
+        <!-- REQUIRED: Mobile responsive menu generator -->
+        <script src="/theme/js/include/selectnav.min.js"></script>
+
+        <!-- REQUIRED: Form element skin  -->
+        <script src="/theme/js/include/jquery.uniform.min.js"></script> 
+
+
+        <script type="text/javascript">
+            var ismobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
+            if (!ismobile) {
+
+                /** ONLY EXECUTE THESE CODES IF MOBILE DETECTION IS FALSE **/
+
+                /* REQUIRED: Datatable PDF/Excel output componant */
+
+                /*document.write('<script src="/theme/js/include/ZeroClipboard.min.js"><\/script>');
+                 document.write('<script src="/theme/js/include/TableTools.min.js"><\/script>');
+                 document.write('<script src="/theme/js/include/select2.min.js"><\/script>');
+                 document.write('<script src="/theme/js/include/jquery.excanvas.min.js"><\/script>');
+                 document.write('<script src="/theme/js/include/jquery.placeholder.min.js"><\/script>');
+                 */
+                /** DEMO SCRIPTS **/
+            } else {
+
+                /** ONLY EXECUTE THESE CODES IF MOBILE DETECTION IS TRUE **/
+
+                document.write('<script src="/theme/js/include/responsive-tables.min.js"><\/script>');
+            }
+        </script>
+
+
+        <!-- REQUIRED: Form validation plugin -->
+        <script src="/theme/js/include/jquery.validate.min.js"></script>
+
+
+
+        <!-- d3 library placed at the bottom for better performance -->
+        <!-- DISABLED  <script src="/theme/js/include/d3.v3.min.js"></script> -->
+        <!-- DISABLED  <script src="/theme/js/include/adv_charts/d3-chart-1.js"></script> -->
+        <!-- DISABLED  <script src="/theme/js/include/adv_charts/d3-chart-2.js"></script> -->
+
+        <!-- Google Geo Chart -->
+        <!-- DISABLED <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script> -->
+        <!-- DISABLED <script type='text/javascript' src='https://www.google.com/jsapi'></script>-->
+        <!-- DISABLED <script src="/theme/js/include/adv_charts/geochart.js"></script> -->
+
+        <!-- end scripts -->
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+<?php return; ?>
+
+
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('ZF2 ' . $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php
+        echo $this->headMeta()
+                ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+                ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?php
+        echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() .'/theme/img/favicon.ico'))
+                ->appendStylesheet($this->basePath() . '/theme/css/style.css')
+                ->appendStylesheet($this->basePath() . '/theme/css/bootstrap-theme.min.css')
+                ->appendStylesheet($this->basePath() . '/theme/css/bootstrap.min.css')
+        ?>
+
+        <!-- Scripts -->
+        <?php
+        echo $this->headScript()
+                ->appendFile($this->basePath() . '/js/bootstrap.min.js')
+                ->appendFile($this->basePath() . '/js/jquery.min.js')
+                ->appendFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+                ->appendFile($this->basePath() . '/js/html5shiv.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+        ;
+        ?>
+
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="<?php echo $this->url('home') ?>"><img src="<?php echo $this->basePath('img/zf2-logo.png') ?>" alt="Zend Framework 2"/>&nbsp;<?php echo $this->translate('Skeleton Application') ?></a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </nav>
+        <div class="container">
+            <?php echo $this->content; ?>
+            <hr>
+            <footer>
+                <p>&copy; 2005 - <?php echo date('Y') ?> by Zend Technologies Ltd. <?php echo $this->translate('All rights reserved.') ?></p>
+            </footer>
+        </div> <!-- /container -->
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>

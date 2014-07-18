@@ -1,0 +1,1179 @@
+/*
+SQLyog Ultimate v8.55 
+MySQL - 5.6.16 : Database - tfd_global_01
+*********************************************************************
+*/
+
+/*!40101 SET NAMES utf8 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*Table structure for table `brand` */
+
+DROP TABLE IF EXISTS `brand`;
+
+CREATE TABLE `brand` (
+  `brand_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `short_name` varchar(16) NOT NULL,
+  `uri` varchar(32) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`brand_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `brand` */
+
+/*Table structure for table `brand_kitchen` */
+
+DROP TABLE IF EXISTS `brand_kitchen`;
+
+CREATE TABLE `brand_kitchen` (
+  `brand_id` int(11) NOT NULL,
+  `kitchen_id` int(11) NOT NULL,
+  PRIMARY KEY (`brand_id`,`kitchen_id`),
+  KEY `FK_brand_kitchen` (`kitchen_id`),
+  CONSTRAINT `FK_brand_kitchen` FOREIGN KEY (`kitchen_id`) REFERENCES `kitchen` (`kitchen_id`),
+  CONSTRAINT `FK_brand_kitchen_brand` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`brand_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `brand_kitchen` */
+
+/*Table structure for table `campaign` */
+
+DROP TABLE IF EXISTS `campaign`;
+
+CREATE TABLE `campaign` (
+  `campaign_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `description` text,
+  `created_by` int(11) NOT NULL,
+  `modified_by` int(11) NOT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`campaign_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `campaign` */
+
+/*Table structure for table `carrier` */
+
+DROP TABLE IF EXISTS `carrier`;
+
+CREATE TABLE `carrier` (
+  `carrier_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `description` text NOT NULL,
+  `user_name` varchar(32) DEFAULT NULL,
+  `password` varchar(32) DEFAULT NULL,
+  `api_key` varchar(32) DEFAULT NULL,
+  `api_secret` varchar(32) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `created_by` int(11) NOT NULL,
+  `modified_by` int(11) NOT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`carrier_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `carrier` */
+
+/*Table structure for table `carrier_delivery_method` */
+
+DROP TABLE IF EXISTS `carrier_delivery_method`;
+
+CREATE TABLE `carrier_delivery_method` (
+  `carrier_delivery_method_id` int(11) NOT NULL AUTO_INCREMENT,
+  `carrier_id` int(11) NOT NULL,
+  `name` varchar(64) NOT NULL COMMENT 'e.g express/ground',
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `created_by` int(11) NOT NULL,
+  `modified_by` int(11) NOT NULL COMMENT 'employee_id',
+  `date_modified` datetime DEFAULT NULL COMMENT 'employee_id',
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`carrier_delivery_method_id`),
+  KEY `FK_carrier_delivery_method` (`carrier_id`),
+  CONSTRAINT `FK_carrier_delivery_method` FOREIGN KEY (`carrier_id`) REFERENCES `carrier` (`carrier_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `carrier_delivery_method` */
+
+/*Table structure for table `carrier_shipment` */
+
+DROP TABLE IF EXISTS `carrier_shipment`;
+
+CREATE TABLE `carrier_shipment` (
+  `carrier_shipment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `carrier_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `sender_detail` varchar(128) DEFAULT NULL COMMENT 'json string',
+  `recipient_detail` varchar(128) DEFAULT NULL COMMENT 'json string',
+  `tracking_code` varchar(64) DEFAULT NULL,
+  `charges` decimal(4,2) DEFAULT NULL,
+  `date_scheduled` datetime DEFAULT NULL,
+  `date_delivered` datetime DEFAULT NULL,
+  `state` enum('na','scheduled','cancelled','delivered') DEFAULT NULL,
+  PRIMARY KEY (`carrier_shipment_id`),
+  KEY `FK_carrier_shipment_carrier` (`carrier_id`),
+  CONSTRAINT `FK_carrier_shipment_carrier` FOREIGN KEY (`carrier_id`) REFERENCES `carrier` (`carrier_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `carrier_shipment` */
+
+/*Table structure for table `carrier_transit_time` */
+
+DROP TABLE IF EXISTS `carrier_transit_time`;
+
+CREATE TABLE `carrier_transit_time` (
+  `carrier_transit_time_id` int(11) NOT NULL AUTO_INCREMENT,
+  `carrier_id` int(11) NOT NULL,
+  `origin` varchar(64) NOT NULL,
+  `destination` varchar(64) NOT NULL,
+  `transit_day` int(2) NOT NULL,
+  `created_by` int(11) NOT NULL COMMENT 'employee_id',
+  `modified_by` int(11) NOT NULL COMMENT 'employee_id',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`carrier_transit_time_id`),
+  KEY `FK_carrier_transit_time` (`carrier_id`),
+  CONSTRAINT `FK_carrier_transit_time` FOREIGN KEY (`carrier_id`) REFERENCES `carrier` (`carrier_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `carrier_transit_time` */
+
+/*Table structure for table `client` */
+
+DROP TABLE IF EXISTS `client`;
+
+CREATE TABLE `client` (
+  `client_id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(64) NOT NULL,
+  `last_name` varchar(64) DEFAULT NULL,
+  `email` varchar(64) DEFAULT NULL,
+  `user_name` varchar(64) NOT NULL,
+  `password` char(32) NOT NULL,
+  `registration_type` enum('self','employee') NOT NULL DEFAULT 'self',
+  `state` enum('lead','attempted','client') NOT NULL DEFAULT 'lead' COMMENT 'lead => user is only completed the signup process, attempted => user has placed his first order in the system but payment is not verified,',
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `last_active` datetime NOT NULL,
+  `visit_count` int(6) NOT NULL DEFAULT '0',
+  `date_last_visit` datetime DEFAULT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `client` */
+
+/*Table structure for table `client_address` */
+
+DROP TABLE IF EXISTS `client_address`;
+
+CREATE TABLE `client_address` (
+  `client_address_id` int(10) unsigned NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `city` varchar(32) NOT NULL,
+  `state` varchar(32) NOT NULL,
+  `zipcode` varchar(16) NOT NULL,
+  `country` varchar(32) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`client_address_id`),
+  KEY `FK_client_address` (`client_id`),
+  CONSTRAINT `FK_client_address` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `client_address` */
+
+/*Table structure for table `client_chosen_meal` */
+
+DROP TABLE IF EXISTS `client_chosen_meal`;
+
+CREATE TABLE `client_chosen_meal` (
+  `client_chosen_meal_id` int(11) NOT NULL AUTO_INCREMENT,
+  `client_id` int(11) NOT NULL,
+  `kitchen_id` int(11) NOT NULL,
+  `menu_id` int(11) NOT NULL,
+  `meal_id` int(11) DEFAULT NULL,
+  `meal_category_id` int(11) DEFAULT NULL,
+  `effective_date` date NOT NULL DEFAULT '0000-00-00',
+  `selection_type` enum('auto','client','modified','sub') DEFAULT 'auto',
+  `special_instruction` text,
+  `meal_print_label` varchar(128) DEFAULT NULL COMMENT 'ex. In case subsitution "CAESAR SALAD NO LETTUCE NO TOMATO SUB CUCUMBER, CARROTS" OR In case full substitution "CAESAR SALAD SUB TUNA WRAP"',
+  `is_conflict` tinyint(1) DEFAULT '0' COMMENT '0 means no-conflict and 1 means conflict',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`client_chosen_meal_id`),
+  KEY `FK_client_chosen_meal_kitchen` (`kitchen_id`),
+  KEY `FK_client_chosen_meal_meal` (`meal_id`),
+  KEY `FK_client_chosen_meal_category` (`meal_category_id`),
+  CONSTRAINT `FK_client_chosen_meal_category` FOREIGN KEY (`meal_category_id`) REFERENCES `meal_category` (`meal_category_id`),
+  CONSTRAINT `FK_client_chosen_meal_kitchen` FOREIGN KEY (`kitchen_id`) REFERENCES `kitchen` (`kitchen_id`),
+  CONSTRAINT `FK_client_chosen_meal_meal` FOREIGN KEY (`meal_id`) REFERENCES `meal` (`meal_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `client_chosen_meal` */
+
+/*Table structure for table `client_dislike_ingredient` */
+
+DROP TABLE IF EXISTS `client_dislike_ingredient`;
+
+CREATE TABLE `client_dislike_ingredient` (
+  `ingredient_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`ingredient_id`,`client_id`),
+  CONSTRAINT `FK_client_dislike_ingredient` FOREIGN KEY (`ingredient_id`) REFERENCES `ingredient` (`ingredient_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `client_dislike_ingredient` */
+
+/*Table structure for table `client_payment_method` */
+
+DROP TABLE IF EXISTS `client_payment_method`;
+
+CREATE TABLE `client_payment_method` (
+  `client_payment_method_id` int(11) NOT NULL AUTO_INCREMENT,
+  `client_id` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `method` enum('visa','amex','mastercard') NOT NULL,
+  `card_number` varchar(32) NOT NULL,
+  `card_expiry_year` date NOT NULL,
+  `card_expiry_month` int(2) NOT NULL,
+  `card_security_code` int(4) NOT NULL,
+  `billing_address` varchar(255) NOT NULL,
+  `billing_city` varchar(64) NOT NULL,
+  `billing_state` varchar(64) NOT NULL,
+  `billing_zipcode` varchar(16) NOT NULL,
+  `billing_country` varchar(64) NOT NULL,
+  PRIMARY KEY (`client_payment_method_id`),
+  KEY `FK_client_payment_method` (`client_id`),
+  CONSTRAINT `FK_client_payment_method` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `client_payment_method` */
+
+/*Table structure for table `credit_category` */
+
+DROP TABLE IF EXISTS `credit_category`;
+
+CREATE TABLE `credit_category` (
+  `credit_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`credit_category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+/*Data for the table `credit_category` */
+
+insert  into `credit_category`(`credit_category_id`,`name`,`is_active`,`date_modified`,`date_created`) values (1,'Food',0,NULL,NULL),(2,'Delivery',0,NULL,NULL),(3,'mis-schedule',0,NULL,NULL),(4,'Packing',0,NULL,NULL),(5,'Admin Cancellation',0,NULL,NULL),(6,'Client Courtesy',0,NULL,NULL);
+
+/*Table structure for table `cycle` */
+
+DROP TABLE IF EXISTS `cycle`;
+
+CREATE TABLE `cycle` (
+  `cycle_id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_detail_id` int(11) NOT NULL,
+  `state` enum('pending','current','complete','suspend','cancel') DEFAULT NULL COMMENT 'Pending=>Cycle is not yet started, Current=>TFD delivering food to the client, Completed=>Meals delivered as per cycle days, suspend=>Client stop the deliveries',
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`cycle_id`),
+  KEY `FK_cycle` (`order_detail_id`),
+  CONSTRAINT `FK_cycle` FOREIGN KEY (`order_detail_id`) REFERENCES `order_detail` (`order_detail_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `cycle` */
+
+/*Table structure for table `delivery` */
+
+DROP TABLE IF EXISTS `delivery`;
+
+CREATE TABLE `delivery` (
+  `order_delivery_id` int(11) NOT NULL AUTO_INCREMENT,
+  `cycle_id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL COMMENT 'sales person id',
+  `credit_category_id` int(11) DEFAULT NULL,
+  `credit_reason` varchar(255) DEFAULT NULL,
+  `effective_date` datetime NOT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`order_delivery_id`),
+  KEY `FK_delivery_cc` (`credit_category_id`),
+  KEY `FK_delivery_cycle` (`cycle_id`),
+  CONSTRAINT `FK_delivery_cc` FOREIGN KEY (`credit_category_id`) REFERENCES `credit_category` (`credit_category_id`),
+  CONSTRAINT `FK_delivery_cycle` FOREIGN KEY (`cycle_id`) REFERENCES `cycle` (`cycle_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `delivery` */
+
+/*Table structure for table `delivery_type` */
+
+DROP TABLE IF EXISTS `delivery_type`;
+
+CREATE TABLE `delivery_type` (
+  `delivery_type_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`delivery_type_id`),
+  UNIQUE KEY `delivery_type_id` (`delivery_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `delivery_type` */
+
+/*Table structure for table `department` */
+
+DROP TABLE IF EXISTS `department`;
+
+CREATE TABLE `department` (
+  `department_id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(64) NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  `date_created` datetime NOT NULL,
+  `date_modified` datetime NOT NULL,
+  PRIMARY KEY (`department_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+/*Data for the table `department` */
+
+insert  into `department`(`department_id`,`title`,`is_active`,`date_created`,`date_modified`) values (1,'Customer Service',1,'2014-05-27 12:34:46','2014-05-27 12:34:46'),(2,'Sales Department',1,'2014-05-27 12:36:10','2014-05-27 12:36:10'),(3,'Logistics',1,'2014-06-03 18:43:16','2014-06-03 18:43:53');
+
+/*Table structure for table `diet` */
+
+DROP TABLE IF EXISTS `diet`;
+
+CREATE TABLE `diet` (
+  `diet_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`diet_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `diet` */
+
+/*Table structure for table `employee` */
+
+DROP TABLE IF EXISTS `employee`;
+
+CREATE TABLE `employee` (
+  `employee_id` int(11) NOT NULL AUTO_INCREMENT,
+  `department_id` int(11) NOT NULL,
+  `first_name` varchar(64) NOT NULL,
+  `last_name` varchar(64) NOT NULL,
+  `email` varchar(64) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  `date_created` datetime NOT NULL,
+  `date_modified` datetime NOT NULL,
+  `date_last_visited` datetime NOT NULL,
+  `dashboard` varchar(64) NOT NULL,
+  `is_driver` tinyint(4) NOT NULL,
+  `password_recovery_token` char(32) DEFAULT NULL,
+  PRIMARY KEY (`employee_id`),
+  KEY `department_id` (`department_id`),
+  CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `department` (`department_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+/*Data for the table `employee` */
+
+insert  into `employee`(`employee_id`,`department_id`,`first_name`,`last_name`,`email`,`password`,`is_active`,`date_created`,`date_modified`,`date_last_visited`,`dashboard`,`is_driver`,`password_recovery_token`) values (2,2,'Michelle','Botana','mbotana@thefreshdiet.com','freshdiet',0,'2014-05-27 12:35:01','2014-05-27 12:35:01','2014-05-27 12:35:01','',0,NULL),(3,1,'Cecily','Williams','ceci@thefreshdiet.com','freshdiet',1,'2014-05-27 12:36:53','2014-05-27 12:36:53','2014-05-27 12:36:53','',0,NULL),(4,1,'Waheed','Mazhar','whd143@gmail.com','e10adc3949ba59abbe56e057f20f883e',1,'2014-05-28 11:05:11','2014-05-28 18:20:01','0000-00-00 00:00:00','CustomerServi',1,'3be9310493fbbf9dcb5fbb150e6ea159');
+
+/*Table structure for table `employee_role` */
+
+DROP TABLE IF EXISTS `employee_role`;
+
+CREATE TABLE `employee_role` (
+  `employee_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  KEY `employee_id` (`employee_id`),
+  KEY `role_id` (`role_id`),
+  CONSTRAINT `employee_role_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
+  CONSTRAINT `employee_role_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `employee_role` */
+
+insert  into `employee_role`(`employee_id`,`role_id`) values (4,3);
+
+/*Table structure for table `employee_session` */
+
+DROP TABLE IF EXISTS `employee_session`;
+
+CREATE TABLE `employee_session` (
+  `employee_id` int(11) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `expiration` datetime NOT NULL,
+  KEY `employee_id` (`employee_id`),
+  CONSTRAINT `employee_session_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `employee_session` */
+
+insert  into `employee_session`(`employee_id`,`token`,`expiration`) values (4,'da8e6dafe381f7cc80059ae98ea52f18','2014-06-10 01:06:23');
+
+/*Table structure for table `event` */
+
+DROP TABLE IF EXISTS `event`;
+
+CREATE TABLE `event` (
+  `event_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`event_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+
+/*Data for the table `event` */
+
+insert  into `event`(`event_id`,`name`,`is_active`,`date_modified`,`date_created`) values (1,'Created',1,'2014-06-09 15:43:13','2014-06-09 15:43:13'),(2,'Promo Apply',1,'2014-06-09 15:43:13','2014-06-09 15:43:13'),(3,'Upgrade',1,'2014-06-09 15:43:13','2014-06-09 15:43:13'),(4,'Downgrade',1,'2014-06-09 15:43:13','2014-06-09 15:43:13'),(5,'Refund',1,'2014-06-09 15:43:13','2014-06-09 15:43:13'),(6,'Credit',1,'2014-06-09 15:43:13','2014-06-09 15:43:13'),(7,'Payment Added',1,'2014-06-09 15:43:13','2014-06-09 15:43:13'),(8,'Payment Success',1,'2014-06-09 15:43:13','2014-06-09 15:43:13'),(9,'Payment Failed',1,'2014-06-09 15:43:13','2014-06-09 15:43:13');
+
+/*Table structure for table `flag` */
+
+DROP TABLE IF EXISTS `flag`;
+
+CREATE TABLE `flag` (
+  `flag_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) DEFAULT NULL,
+  `icon` varchar(16) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  UNIQUE KEY `dietflag_id` (`flag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `flag` */
+
+/*Table structure for table `ingredient` */
+
+DROP TABLE IF EXISTS `ingredient`;
+
+CREATE TABLE `ingredient` (
+  `ingredient_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ingredient_category_id` int(11) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `display_order` int(11) DEFAULT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`ingredient_id`),
+  KEY `FK_ingredient` (`ingredient_category_id`),
+  CONSTRAINT `FK_ingredient` FOREIGN KEY (`ingredient_category_id`) REFERENCES `ingredient_category` (`ingredient_category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `ingredient` */
+
+/*Table structure for table `ingredient_category` */
+
+DROP TABLE IF EXISTS `ingredient_category`;
+
+CREATE TABLE `ingredient_category` (
+  `ingredient_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_ingredient_category_id` int(11) DEFAULT '0',
+  `name` varchar(30) DEFAULT NULL,
+  `short_name` varchar(4) DEFAULT NULL,
+  `display_order` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`ingredient_category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+
+/*Data for the table `ingredient_category` */
+
+insert  into `ingredient_category`(`ingredient_category_id`,`parent_ingredient_category_id`,`name`,`short_name`,`display_order`,`is_active`,`date_modified`,`date_created`) values (3,0,'Fruit','Frui',3,0,NULL,NULL),(4,0,'Vegetables','Vege',4,0,NULL,NULL),(5,0,'Meat','Meat',5,0,NULL,NULL),(6,0,'Pork & Poultry','Poul',6,0,NULL,NULL),(7,0,'Seafood','Fish',7,0,NULL,NULL),(8,0,'Dairy','Dair',8,0,NULL,NULL),(9,0,'Nuts & Grains','Nuts',9,0,NULL,NULL),(10,0,'Spices','Spic',10,0,NULL,NULL);
+
+/*Table structure for table `kitchen` */
+
+DROP TABLE IF EXISTS `kitchen`;
+
+CREATE TABLE `kitchen` (
+  `kitchen_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) DEFAULT NULL,
+  `short_name` varchar(16) DEFAULT NULL,
+  `address` varchar(128) DEFAULT NULL,
+  `address_ext` varchar(64) DEFAULT NULL,
+  `city` varchar(64) DEFAULT NULL,
+  `state` varchar(64) DEFAULT NULL,
+  `zip` varchar(16) DEFAULT NULL,
+  `country` varchar(64) DEFAULT NULL,
+  `latitude` varchar(16) DEFAULT NULL,
+  `longitude` varchar(16) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`kitchen_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `kitchen` */
+
+/*Table structure for table `kitchen_attribute` */
+
+DROP TABLE IF EXISTS `kitchen_attribute`;
+
+CREATE TABLE `kitchen_attribute` (
+  `kitchen_id` int(11) NOT NULL,
+  `key` enum('daily_lag_days','map_lag_days') NOT NULL,
+  `value` text COMMENT 'simple or json string',
+  PRIMARY KEY (`kitchen_id`,`key`),
+  CONSTRAINT `FK_kitchen_attribute` FOREIGN KEY (`kitchen_id`) REFERENCES `kitchen` (`kitchen_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `kitchen_attribute` */
+
+/*Table structure for table `kitchen_lag_time` */
+
+DROP TABLE IF EXISTS `kitchen_lag_time`;
+
+CREATE TABLE `kitchen_lag_time` (
+  `kitchen_id` int(11) NOT NULL,
+  `delivery_type_id` int(11) NOT NULL,
+  `week_day` varchar(16) NOT NULL COMMENT 'food day',
+  `client_cutoff_day` varchar(16) NOT NULL,
+  `client_cuttoff_time` time NOT NULL,
+  `admin_cutoff_day` varchar(16) NOT NULL,
+  `admin_cutoff_time` time NOT NULL,
+  `delivery_day` varchar(16) DEFAULT NULL,
+  `delivery_time` time DEFAULT NULL,
+  PRIMARY KEY (`kitchen_id`,`delivery_type_id`,`week_day`),
+  KEY `FK_kitchen_lag_time_delivery_type` (`delivery_type_id`),
+  CONSTRAINT `FK_kitchen_lag_time` FOREIGN KEY (`kitchen_id`) REFERENCES `kitchen` (`kitchen_id`),
+  CONSTRAINT `FK_kitchen_lag_time_delivery_type` FOREIGN KEY (`delivery_type_id`) REFERENCES `delivery_type` (`delivery_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `kitchen_lag_time` */
+
+/*Table structure for table `kitchen_plan` */
+
+DROP TABLE IF EXISTS `kitchen_plan`;
+
+CREATE TABLE `kitchen_plan` (
+  `kitchen_id` int(11) NOT NULL,
+  `plan_id` int(11) NOT NULL,
+  PRIMARY KEY (`kitchen_id`,`plan_id`),
+  KEY `FK_kitchen_plan` (`plan_id`),
+  CONSTRAINT `FK_kitchen_plan` FOREIGN KEY (`plan_id`) REFERENCES `plan` (`plan_id`),
+  CONSTRAINT `FK_kitchen_plan0` FOREIGN KEY (`kitchen_id`) REFERENCES `kitchen` (`kitchen_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `kitchen_plan` */
+
+/*Table structure for table `kitchen_serving_area` */
+
+DROP TABLE IF EXISTS `kitchen_serving_area`;
+
+CREATE TABLE `kitchen_serving_area` (
+  `zip_code` varchar(16) NOT NULL,
+  `kitchen_id` int(11) NOT NULL,
+  PRIMARY KEY (`zip_code`,`kitchen_id`),
+  KEY `ndx_node_id` (`kitchen_id`),
+  CONSTRAINT `FK_kitchen_serving_area` FOREIGN KEY (`kitchen_id`) REFERENCES `kitchen` (`kitchen_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `kitchen_serving_area` */
+
+/*Table structure for table `meal` */
+
+DROP TABLE IF EXISTS `meal`;
+
+CREATE TABLE `meal` (
+  `meal_id` int(11) NOT NULL AUTO_INCREMENT,
+  `meal_category_id` int(11) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `short_name` varchar(64) NOT NULL,
+  `instruction` text,
+  `display_order` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`meal_id`),
+  KEY `FK_meal` (`meal_category_id`),
+  CONSTRAINT `FK_meal` FOREIGN KEY (`meal_category_id`) REFERENCES `meal_category` (`meal_category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `meal` */
+
+/*Table structure for table `meal_category` */
+
+DROP TABLE IF EXISTS `meal_category`;
+
+CREATE TABLE `meal_category` (
+  `meal_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_meal_category_id` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(255) DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`meal_category_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+/*Data for the table `meal_category` */
+
+insert  into `meal_category`(`meal_category_id`,`parent_meal_category_id`,`name`,`display_order`,`is_active`,`date_modified`,`date_created`) values (1,0,'Breakfast',1,0,NULL,NULL),(2,0,'Lunch',2,0,NULL,NULL),(3,0,'Dinner',3,0,NULL,NULL),(4,0,'Snack',6,0,NULL,NULL),(5,0,'Starch Side',4,0,NULL,NULL),(6,0,'Dessert Snack',7,0,NULL,NULL),(7,0,'Vegetable Side',5,0,NULL,NULL);
+
+/*Table structure for table `meal_diet` */
+
+DROP TABLE IF EXISTS `meal_diet`;
+
+CREATE TABLE `meal_diet` (
+  `meal_id` int(11) NOT NULL,
+  `diet_id` int(11) NOT NULL,
+  PRIMARY KEY (`meal_id`,`diet_id`),
+  KEY `FK_meal_diet` (`diet_id`),
+  CONSTRAINT `FK_meal_diet` FOREIGN KEY (`diet_id`) REFERENCES `diet` (`diet_id`),
+  CONSTRAINT `FK_meal_diet_mealdiet` FOREIGN KEY (`meal_id`) REFERENCES `meal` (`meal_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `meal_diet` */
+
+/*Table structure for table `meal_flag` */
+
+DROP TABLE IF EXISTS `meal_flag`;
+
+CREATE TABLE `meal_flag` (
+  `meal_id` int(11) NOT NULL,
+  `flag_id` int(11) NOT NULL,
+  PRIMARY KEY (`meal_id`,`flag_id`),
+  KEY `FK_meal_flag` (`flag_id`),
+  CONSTRAINT `FK_meal_flag` FOREIGN KEY (`flag_id`) REFERENCES `flag` (`flag_id`),
+  CONSTRAINT `FK_meal_flag_meal` FOREIGN KEY (`meal_id`) REFERENCES `meal` (`meal_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `meal_flag` */
+
+/*Table structure for table `meal_ingredient` */
+
+DROP TABLE IF EXISTS `meal_ingredient`;
+
+CREATE TABLE `meal_ingredient` (
+  `meal_id` int(11) NOT NULL,
+  `ingredient_id` int(11) NOT NULL,
+  PRIMARY KEY (`meal_id`,`ingredient_id`),
+  KEY `FK_meal_ingredient` (`ingredient_id`),
+  CONSTRAINT `FK_meal_ingredient` FOREIGN KEY (`ingredient_id`) REFERENCES `ingredient` (`ingredient_id`),
+  CONSTRAINT `FK_meal_ingredient_meal` FOREIGN KEY (`meal_id`) REFERENCES `meal` (`meal_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `meal_ingredient` */
+
+/*Table structure for table `menu` */
+
+DROP TABLE IF EXISTS `menu`;
+
+CREATE TABLE `menu` (
+  `menu_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `display_order` int(11) NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`menu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `menu` */
+
+/*Table structure for table `menu_meal` */
+
+DROP TABLE IF EXISTS `menu_meal`;
+
+CREATE TABLE `menu_meal` (
+  `menu_id` int(11) NOT NULL,
+  `meal_id` int(11) NOT NULL,
+  PRIMARY KEY (`menu_id`,`meal_id`),
+  KEY `FK_menu_meal_meal` (`meal_id`),
+  CONSTRAINT `FK_menu_meal` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`),
+  CONSTRAINT `FK_menu_meal_meal` FOREIGN KEY (`meal_id`) REFERENCES `meal` (`meal_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `menu_meal` */
+
+/*Table structure for table `menu_post` */
+
+DROP TABLE IF EXISTS `menu_post`;
+
+CREATE TABLE `menu_post` (
+  `menu_post_id` int(11) NOT NULL,
+  `menu_id` int(11) NOT NULL,
+  `kitchen_id` int(11) NOT NULL,
+  `effective_date` date DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`menu_post_id`),
+  KEY `FK_menu_post` (`menu_id`),
+  KEY `FK_menu_post_kitchen` (`kitchen_id`),
+  CONSTRAINT `FK_menu_post` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`menu_id`),
+  CONSTRAINT `FK_menu_post_kitchen` FOREIGN KEY (`kitchen_id`) REFERENCES `kitchen` (`kitchen_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `menu_post` */
+
+/*Table structure for table `menu_post_detail` */
+
+DROP TABLE IF EXISTS `menu_post_detail`;
+
+CREATE TABLE `menu_post_detail` (
+  `menu_post_detail_id` int(11) NOT NULL AUTO_INCREMENT,
+  `menu_post_id` int(11) NOT NULL,
+  `meal_id` int(11) NOT NULL,
+  `display_order` int(11) NOT NULL,
+  PRIMARY KEY (`menu_post_detail_id`),
+  KEY `FK_menu_post_detail_meal` (`meal_id`),
+  KEY `FK_menu_post_detail` (`menu_post_id`),
+  CONSTRAINT `FK_menu_post_detail` FOREIGN KEY (`menu_post_id`) REFERENCES `menu_post` (`menu_post_id`),
+  CONSTRAINT `FK_menu_post_detail_meal` FOREIGN KEY (`meal_id`) REFERENCES `meal` (`meal_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `menu_post_detail` */
+
+/*Table structure for table `navigation` */
+
+DROP TABLE IF EXISTS `navigation`;
+
+CREATE TABLE `navigation` (
+  `navigation_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `parent_id` int(11) DEFAULT '0',
+  `uri` varchar(128) NOT NULL DEFAULT 'javascript:void(0)',
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`navigation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `navigation` */
+
+/*Table structure for table `navigation_role` */
+
+DROP TABLE IF EXISTS `navigation_role`;
+
+CREATE TABLE `navigation_role` (
+  `navigation_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  PRIMARY KEY (`navigation_id`,`role_id`),
+  KEY `FK_navigation_role_role` (`role_id`),
+  CONSTRAINT `FK_navigation_role_navigation` FOREIGN KEY (`navigation_id`) REFERENCES `navigation` (`navigation_id`),
+  CONSTRAINT `FK_navigation_role_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `navigation_role` */
+
+/*Table structure for table `note` */
+
+DROP TABLE IF EXISTS `note`;
+
+CREATE TABLE `note` (
+  `note_id` int(11) NOT NULL AUTO_INCREMENT,
+  `note_category_id` int(11) NOT NULL,
+  `client_id` int(11) DEFAULT NULL,
+  `description` text NOT NULL,
+  `created_by` int(11) NOT NULL COMMENT 'employee_id from employee table',
+  `modified_by` int(11) NOT NULL COMMENT 'employee_id from employee table',
+  `is_active` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`note_id`),
+  KEY `FK_note_category` (`note_category_id`),
+  CONSTRAINT `FK_note_category` FOREIGN KEY (`note_category_id`) REFERENCES `note_category` (`note_category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `note` */
+
+/*Table structure for table `note_asset` */
+
+DROP TABLE IF EXISTS `note_asset`;
+
+CREATE TABLE `note_asset` (
+  `note_asset_id` int(11) NOT NULL AUTO_INCREMENT,
+  `note_id` int(11) NOT NULL,
+  `original_name` varchar(64) NOT NULL,
+  `uri` varchar(128) NOT NULL,
+  PRIMARY KEY (`note_asset_id`),
+  KEY `FK_note_asset_note` (`note_id`),
+  CONSTRAINT `FK_note_asset_note` FOREIGN KEY (`note_id`) REFERENCES `note` (`note_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `note_asset` */
+
+/*Table structure for table `note_category` */
+
+DROP TABLE IF EXISTS `note_category`;
+
+CREATE TABLE `note_category` (
+  `note_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL COMMENT ' etc. general/kitchen/Meal Reminder',
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`note_category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `note_category` */
+
+/*Table structure for table `order` */
+
+DROP TABLE IF EXISTS `order`;
+
+CREATE TABLE `order` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
+  `employee_id` int(11) DEFAULT NULL,
+  `allowed_start_date` datetime DEFAULT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `order` */
+
+/*Table structure for table `order_detail` */
+
+DROP TABLE IF EXISTS `order_detail`;
+
+CREATE TABLE `order_detail` (
+  `order_detail_id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL,
+  `client_id` int(11) DEFAULT NULL,
+  `client_address_id` int(11) DEFAULT NULL,
+  `event_id` int(11) NOT NULL,
+  `kitchen_id` int(11) NOT NULL,
+  `plan_id` int(11) NOT NULL,
+  `plan_template_id` int(11) NOT NULL,
+  `plan_template_net` decimal(7,2) DEFAULT NULL,
+  `plan_template_qty` int(3) DEFAULT NULL,
+  `tax_rate` decimal(7,4) DEFAULT NULL,
+  `shipping_charges` decimal(4,2) DEFAULT NULL,
+  `promotion_id` int(11) DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`order_detail_id`),
+  KEY `FK_order_detail_order` (`order_id`),
+  KEY `FK_order_detail` (`event_id`),
+  KEY `FK_order_detail_order_detail` (`client_id`),
+  CONSTRAINT `FK_order_detail` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`),
+  CONSTRAINT `FK_order_detail_order` FOREIGN KEY (`order_id`) REFERENCES `order` (`order_id`),
+  CONSTRAINT `FK_order_detail_order_detail` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `order_detail` */
+
+/*Table structure for table `payment` */
+
+DROP TABLE IF EXISTS `payment`;
+
+CREATE TABLE `payment` (
+  `payment_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'pk',
+  `order_id` int(11) NOT NULL COMMENT 'fk',
+  `order_detail_id` int(11) NOT NULL COMMENT 'fk',
+  `client_payment_method_id` int(11) NOT NULL COMMENT 'fk',
+  `transaction_id` int(11) DEFAULT NULL,
+  `transaction_state` enum('na','scheduled','batched','failed','completed') NOT NULL DEFAULT 'na',
+  `transaction_notes` varchar(255) DEFAULT NULL,
+  `transaction_amount` decimal(7,2) NOT NULL DEFAULT '0.00',
+  `transaction_schedule_date` datetime DEFAULT NULL,
+  `transaction_date` datetime DEFAULT NULL,
+  `date_modified` datetime NOT NULL,
+  `date_created` datetime NOT NULL,
+  PRIMARY KEY (`payment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `payment` */
+
+/*Table structure for table `plan` */
+
+DROP TABLE IF EXISTS `plan`;
+
+CREATE TABLE `plan` (
+  `plan_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`plan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `plan` */
+
+/*Table structure for table `plan_attribute` */
+
+DROP TABLE IF EXISTS `plan_attribute`;
+
+CREATE TABLE `plan_attribute` (
+  `plan_attribute_id` int(11) NOT NULL AUTO_INCREMENT,
+  `plan_id` int(11) NOT NULL,
+  `key` varchar(16) DEFAULT NULL,
+  `value` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`plan_attribute_id`),
+  KEY `FK_plan_attribute` (`plan_id`),
+  CONSTRAINT `FK_plan_attribute` FOREIGN KEY (`plan_id`) REFERENCES `plan` (`plan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `plan_attribute` */
+
+/*Table structure for table `plan_template` */
+
+DROP TABLE IF EXISTS `plan_template`;
+
+CREATE TABLE `plan_template` (
+  `template_id` int(11) NOT NULL,
+  `plan_id` int(11) NOT NULL,
+  `week_day` varchar(16) NOT NULL,
+  `key` varchar(16) NOT NULL COMMENT 'like breakfast, lunch, dinner, snack etc',
+  `value` tinyint(2) DEFAULT NULL COMMENT 'in integer',
+  PRIMARY KEY (`template_id`,`plan_id`),
+  KEY `FK_plan_template` (`plan_id`),
+  CONSTRAINT `FK_plan_template` FOREIGN KEY (`plan_id`) REFERENCES `plan` (`plan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `plan_template` */
+
+/*Table structure for table `promotion` */
+
+DROP TABLE IF EXISTS `promotion`;
+
+CREATE TABLE `promotion` (
+  `promotion_id` int(11) NOT NULL AUTO_INCREMENT,
+  `promotion_type_id` int(11) NOT NULL,
+  `campaign_id` int(11) NOT NULL,
+  `plan_template_id` int(11) DEFAULT NULL,
+  `delivery_type_id` int(11) DEFAULT NULL,
+  `promotion_code` varchar(32) NOT NULL,
+  `fixed_price` decimal(4,2) DEFAULT NULL,
+  `percentage` int(2) DEFAULT NULL,
+  `addon_days` int(2) DEFAULT NULL,
+  `addon_price` decimal(4,2) DEFAULT NULL,
+  `valid_from` datetime NOT NULL,
+  `valid_to` datetime NOT NULL,
+  `is_internal` tinyint(1) NOT NULL DEFAULT '0',
+  `usage_count` int(11) NOT NULL DEFAULT '0',
+  `created_by` int(11) NOT NULL COMMENT 'employee_id',
+  `modified_by` int(11) NOT NULL COMMENT 'employee_id',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`promotion_id`),
+  KEY `FK_promotion_category` (`promotion_type_id`),
+  KEY `FK_promotion_campaign` (`campaign_id`),
+  CONSTRAINT `FK_promotion_campaign` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`campaign_id`),
+  CONSTRAINT `FK_promotion_category` FOREIGN KEY (`promotion_type_id`) REFERENCES `promotion_type` (`promotion_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `promotion` */
+
+/*Table structure for table `promotion_surfer` */
+
+DROP TABLE IF EXISTS `promotion_surfer`;
+
+CREATE TABLE `promotion_surfer` (
+  `promotion_surfer_id` int(11) NOT NULL AUTO_INCREMENT,
+  `promotion_id` int(11) NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`promotion_surfer_id`),
+  KEY `FK_promotion_surfer_promotion` (`promotion_id`),
+  CONSTRAINT `FK_promotion_surfer_promotion` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`promotion_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `promotion_surfer` */
+
+/*Table structure for table `promotion_type` */
+
+DROP TABLE IF EXISTS `promotion_type`;
+
+CREATE TABLE `promotion_type` (
+  `promotion_type_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL COMMENT 'etc. fixed/percentage/add-on/\r\n',
+  `instruction` text,
+  `is_activity` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`promotion_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `promotion_type` */
+
+/*Table structure for table `resource` */
+
+DROP TABLE IF EXISTS `resource`;
+
+CREATE TABLE `resource` (
+  `resource_id` int(11) NOT NULL AUTO_INCREMENT,
+  `namespace` varchar(64) NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  `date_created` datetime NOT NULL,
+  `date_modified` datetime NOT NULL,
+  PRIMARY KEY (`resource_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Data for the table `resource` */
+
+insert  into `resource`(`resource_id`,`namespace`,`is_active`,`date_created`,`date_modified`) values (1,'User\\View',1,'2014-05-30 22:17:21','2014-05-30 22:17:21'),(2,'User\\Edit',1,'2014-05-30 22:17:39','2014-05-30 22:17:39');
+
+/*Table structure for table `role` */
+
+DROP TABLE IF EXISTS `role`;
+
+CREATE TABLE `role` (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(64) NOT NULL,
+  `description` text NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  `is_active` tinyint(4) NOT NULL,
+  `date_created` datetime NOT NULL,
+  `date_modified` datetime NOT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+/*Data for the table `role` */
+
+insert  into `role`(`role_id`,`title`,`description`,`parent_id`,`is_active`,`date_created`,`date_modified`) values (1,'customer service','',0,1,'2014-05-27 12:32:35','2014-05-27 12:32:35'),(2,'sales','',0,1,'2014-05-27 12:33:09','2014-05-27 12:33:09'),(3,'IT Department','web devs',0,1,'2014-05-29 08:30:19','2014-05-29 08:30:19');
+
+/*Table structure for table `role_resource` */
+
+DROP TABLE IF EXISTS `role_resource`;
+
+CREATE TABLE `role_resource` (
+  `role_resource_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) NOT NULL,
+  `resource_id` int(11) NOT NULL,
+  `date_created` datetime NOT NULL,
+  `date_modified` datetime NOT NULL,
+  PRIMARY KEY (`role_resource_id`),
+  KEY `role_id` (`role_id`),
+  KEY `resource_id` (`resource_id`),
+  CONSTRAINT `role_resource_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
+  CONSTRAINT `role_resource_ibfk_2` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`resource_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+/*Data for the table `role_resource` */
+
+insert  into `role_resource`(`role_resource_id`,`role_id`,`resource_id`,`date_created`,`date_modified`) values (1,1,1,'2014-05-30 22:17:55','2014-05-30 22:17:55'),(2,1,2,'2014-05-30 22:18:04','2014-05-30 22:18:04');
+
+/*Table structure for table `subsititution_ingredient` */
+
+DROP TABLE IF EXISTS `subsititution_ingredient`;
+
+CREATE TABLE `subsititution_ingredient` (
+  `subsititution_category_id` int(11) NOT NULL,
+  `ingredient_id` int(11) NOT NULL,
+  PRIMARY KEY (`subsititution_category_id`,`ingredient_id`),
+  KEY `FK_subsititution_ingredient_ingredient` (`ingredient_id`),
+  CONSTRAINT `FK_subsititution_ingredient` FOREIGN KEY (`subsititution_category_id`) REFERENCES `subsititution_ingredient_category` (`substitution_category_id`),
+  CONSTRAINT `FK_subsititution_ingredient_ingredient` FOREIGN KEY (`ingredient_id`) REFERENCES `ingredient` (`ingredient_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `subsititution_ingredient` */
+
+/*Table structure for table `subsititution_ingredient_category` */
+
+DROP TABLE IF EXISTS `subsititution_ingredient_category`;
+
+CREATE TABLE `subsititution_ingredient_category` (
+  `substitution_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ingredient_category_id` int(11) NOT NULL COMMENT 'target subsitute category',
+  `name` varchar(64) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '0',
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`substitution_category_id`),
+  KEY `FK_subsititution_ingredient_category` (`ingredient_category_id`),
+  CONSTRAINT `FK_subsititution_ingredient_category` FOREIGN KEY (`ingredient_category_id`) REFERENCES `ingredient_category` (`ingredient_category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `subsititution_ingredient_category` */
+
+/*Table structure for table `task` */
+
+DROP TABLE IF EXISTS `task`;
+
+CREATE TABLE `task` (
+  `task_id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_category_id` int(11) NOT NULL,
+  `task_priority_id` int(11) NOT NULL,
+  `created_by` int(11) NOT NULL COMMENT 'employee_id from employee table',
+  `assigned_to` int(11) DEFAULT NULL COMMENT 'employee_id from employee table',
+  `assigned_date` datetime DEFAULT NULL,
+  `name` varchar(128) NOT NULL,
+  `description` text,
+  `state` enum('un-assigned','in-progress','completed') DEFAULT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`task_id`),
+  KEY `FK_task_category` (`task_category_id`),
+  KEY `FK_task_priority` (`task_priority_id`),
+  CONSTRAINT `FK_task_category` FOREIGN KEY (`task_category_id`) REFERENCES `task_category` (`task_category_id`),
+  CONSTRAINT `FK_task_priority` FOREIGN KEY (`task_priority_id`) REFERENCES `task_priority` (`task_priority_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `task` */
+
+/*Table structure for table `task_activity` */
+
+DROP TABLE IF EXISTS `task_activity`;
+
+CREATE TABLE `task_activity` (
+  `task_activity_id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`task_activity_id`),
+  KEY `FK_task_activity` (`task_id`),
+  CONSTRAINT `FK_task_activity` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `task_activity` */
+
+/*Table structure for table `task_category` */
+
+DROP TABLE IF EXISTS `task_category`;
+
+CREATE TABLE `task_category` (
+  `task_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) DEFAULT NULL,
+  `is_active` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`task_category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `task_category` */
+
+/*Table structure for table `task_email_template` */
+
+DROP TABLE IF EXISTS `task_email_template`;
+
+CREATE TABLE `task_email_template` (
+  `task_email_template_id` int(11) NOT NULL AUTO_INCREMENT,
+  `target_user` enum('client','assignee','assignor','management') NOT NULL,
+  `template_body` text NOT NULL,
+  `date_modified` datetime DEFAULT NULL,
+  `date_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`task_email_template_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `task_email_template` */
+
+/*Table structure for table `task_priority` */
+
+DROP TABLE IF EXISTS `task_priority`;
+
+CREATE TABLE `task_priority` (
+  `task_priority_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) DEFAULT NULL,
+  `color_code` char(7) DEFAULT NULL COMMENT '#ffffff',
+  PRIMARY KEY (`task_priority_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `task_priority` */
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

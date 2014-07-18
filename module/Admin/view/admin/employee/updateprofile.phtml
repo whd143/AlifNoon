@@ -1,0 +1,37 @@
+<!-- main content -->
+<div id="page-content">
+<?php
+$title = 'Update Employee';
+ $this->headTitle($title);
+ ?>
+ <h1 id="page-header"><?php echo $this->escapeHtml($title); ?></h1>
+ <?php 
+ $form->setAttribute('action', $this->url('admin/employee/update', array('employee_id' =>$this->employee_id,)));
+ $form->prepare();
+
+ echo $this->form()->openTag($form);
+ // user below code to display form fields
+ echo $this->formHidden($form->get('employee_id'));
+ echo $this->formHidden($form->get('date_created'));
+ echo $this->formHidden($form->get('date_last_visited'));
+ echo $this->formHidden($form->get('date_modified'));
+ echo $this->formRow($form->get('department_id'));
+ echo $this->formRow($form->get('first_name'));
+ echo $this->formRow($form->get('last_name'));
+ echo $this->formRow($form->get('email'));
+ echo $this->formRow($form->get('password'));
+ echo $this->formRow($form->get('is_active'));
+ echo $this->formRow($form->get('dashboard'));
+ echo $this->formRow($form->get('is_driver'));
+ echo $this->formRow($form->get('roles'));
+ echo $this->formSubmit($form->get('submit'));
+ // or use the below code
+ //echo $this->formCollection($form);
+ echo $this->form()->closeTag();
+?>
+ <p>
+     <a href="<?php echo $this->url('admin/employee/delete', array('employee_id' =>$this->employee_id));?>" onclick="return confirm('Are You Crazy?');" class="btn btn-danger">Delete</a>
+ </p>
+ 		
+</div>
+<!-- end main content -->
