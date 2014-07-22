@@ -16,7 +16,7 @@ return array(
         'driver' => 'Pdo',
         'dsn' => 'mysql:dbname=tfd_global_01;host=localhost',
         'username' => 'root',
-        'password' => 'secret',
+        'password' => '',
         'driver_options' => array(
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
         ),

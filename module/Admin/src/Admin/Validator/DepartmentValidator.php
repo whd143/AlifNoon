@@ -42,7 +42,8 @@ class DepartmentValidator implements InputFilterAwareInterface
             ), 
             'validators' => array( 
               array(
-                'name' => 'Alpha'
+                'name' => 'Alpha',
+                'allowwhitespace' => true,
               )
             ), 
         ])); 

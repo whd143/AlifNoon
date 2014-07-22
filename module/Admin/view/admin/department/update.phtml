@@ -6,24 +6,50 @@
         $this->headTitle($title);
     ?>
      <h1 id="page-header"><?php echo $this->escapeHtml($title); ?></h1>
-     <?php 
-        //echo '<pre>'; print_r($errors); echo '</pre>'; echo $this->department_id; die('here');
-        $form->setAttribute('action', $this->url('admin/department/update', array('department_id' =>$this->department_id)));
-        $form->prepare();
+     <div class="fluid-container">
+        <section class="" id="widget-grid">
+            <div class="row" style="margin-left: -15px;">
+            <article class="col-md-12 sortable-grid ui-sortable">
+                <div id="widget-id-1" class="jarviswidget jarviswidget-sortable" role="widget">
+                    <header role="heading">                         
+                    </header>
+                    <div class="message">
+                      <?php
+                          echo $message;
+                      ?>
+                    </div>
+                    <div class="error">
+                      <?php
+                          echo $error;
+                     ?>
+                    </div>                    
+                    <div role="content" style="display: block;">
+                        <div class="inner-spacer">
+                            <?php 
+                               //echo '<pre>'; print_r($errors); echo '</pre>'; echo $this->department_id; die('here');
+                               $form->setAttribute('action', $this->url('admin/department/update', array('department_id' =>$this->department_id)));
+                               $form->prepare();
 
-        echo $this->form()->openTag($form);
-        // user below code to display form fields 
-        echo $this->formHidden($form->get('department_id'));
-        echo $this->formRow($form->get('title'));
-        echo $this->formRow($form->get('is_active'));
-        echo $this->formHidden($form->get('date_created')); 
-        echo $this->formHidden($form->get('date_modified'));
-        echo $this->formSubmit($form->get('submit'));
-        // or use the below code
-        //echo $this->formCollection($form);
-        echo $this->form()->closeTag();
-    ?>
+                               echo $this->form()->openTag($form);
+                               // user below code to display form fields 
+                               echo $this->formHidden($form->get('department_id'));
+                               echo $this->formRow($form->get('title'));
+                               echo $this->formRow($form->get('is_active'));
+                               echo $this->formHidden($form->get('date_created')); 
+                               echo $this->formHidden($form->get('date_modified'));
+                               echo $this->formSubmit($form->get('submit'));
+                               // or use the below code
+                               //echo $this->formCollection($form);
+                               echo $this->form()->closeTag();
+                           ?>
 
-    </div>
-    <!-- end main content -->
+                        </div>
+                </div>
+                </div>
+            </article>
+        </div>
+        </section>
+    </div>		
+</div>
+<!-- end main content -->
 </div>

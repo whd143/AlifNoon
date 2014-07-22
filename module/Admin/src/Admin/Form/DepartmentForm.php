@@ -24,6 +24,7 @@ class DepartmentForm extends Form
             'attributes' => array( 
                 'required' => 'required',
                 'maxlength' => 64,
+                'class' => 'form-control alpha',
             ),
             'options' => array(
                  'label' => 'Title',
@@ -33,7 +34,6 @@ class DepartmentForm extends Form
             'name' => 'is_active', 
             'type' => 'Zend\Form\Element\Checkbox', 
             'attributes' => array( 
-                'required' => 'required', 
             ),
             'options' => array(
                  'label' => 'Active?',
