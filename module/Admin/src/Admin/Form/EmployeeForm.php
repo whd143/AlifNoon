@@ -11,6 +11,7 @@ class EmployeeForm extends Form
         parent::__construct(''); 
         
         $this->setAttribute('method', 'post'); 
+        $this->setAttribute('id', "validate-demo-js");
         
         $this->add(array( 
             'name' => 'employee_id', 
@@ -135,13 +136,19 @@ class EmployeeForm extends Form
         
         $this->add(array( 
             'name' => 'roles', 
-            'type' => 'Zend\Form\Element\Checkbox', 
+            'type' => 'Zend\Form\Element\MultiCheckbox',
             'attributes' => array( 
-                'required' => 'required',
+                //'required' => 'required',
+                'class' => 'employee_roles',
             ),
             'options' => array(
-                 'label' => 'Admin',
-                 'checked_value' => '23',
+                 'label' => 'Roles',
+                 //'checked_value' => '23',
+                /*'value_options' => array(
+                        '0' => 'Employee',
+                        '23' => 'Admin',
+                        '30' => 'Client',
+                ),*/
              ),
         ));
         

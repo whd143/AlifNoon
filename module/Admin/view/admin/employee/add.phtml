@@ -1,3 +1,4 @@
+<div class="no-right-bar">
 <!-- main content -->
 <div id="page-content">
 <?php
@@ -5,7 +6,17 @@ $title = 'Add new Employee';
  $this->headTitle($title);
  ?>
   <h1 id="page-header"><?php echo $this->escapeHtml($title); ?></h1>
- <?php
+  <div class="message">
+    <?php
+        echo $message;
+    ?>
+  </div>
+  <div class="error">
+    <?php
+        echo $error;
+   ?>
+  </div>
+  <?php
  //echo '<pre>'; print_r($error); echo '</pre>';
  $form->setAttribute('action', $this->url('admin/employee/add', array('action' => 'add')));
  $form->prepare();
@@ -30,3 +41,4 @@ $title = 'Add new Employee';
 		
 </div>
 <!-- end main content -->
+</div>

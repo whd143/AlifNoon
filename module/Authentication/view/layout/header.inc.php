@@ -40,10 +40,12 @@
 
         <?php
         $this->headLink()
-                ->appendStylesheet($this->basePath() . '/theme/css/bootstrap.min.css') /* bootstrap default css (DO NOT REMOVE) */
+                ->appendStylesheet($this->basePath() . '/theme/css/bootstrap.min.css?v=1') /* bootstrap default css (DO NOT REMOVE) */
+                ->appendStylesheet($this->basePath() . '/theme/css/bootstrap-responsive.min.css?v=1') /* bootstrap default css (DO NOT REMOVE) */                
                 ->appendStylesheet($this->basePath() . '/theme/css/font-awesome.min.css?v=1') /* font awsome and custom icons */
                 ->appendStylesheet($this->basePath() . '/theme/css/cus-icons.css?v=1') /* font awsome and custom icons */
                 ->appendStylesheet($this->basePath() . '/theme/css/jarvis-widgets.css?v=1') /* jarvis widget css */
+                ->appendStylesheet($this->basePath() . '/theme/css/DT_bootstrap.css?v=1') /* DT_bootstrap css */
                 ->appendStylesheet($this->basePath() . '/theme/css/responsive-tables.css?v=1') /* Data tables, normal tables and responsive tables css */
                 ->appendStylesheet($this->basePath() . '/theme/css/uniform.default.css?v=1') /* used where radio, select and form elements are used */
                 ->appendStylesheet($this->basePath() . '/theme/css/select2.css?v=1') /* used where radio, select and form elements are used */
