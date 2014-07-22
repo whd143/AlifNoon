@@ -54,7 +54,11 @@ class EmployeeValidator implements InputFilterAwareInterface
             ), 
             'validators' => array( 
               array(
-                'name' => 'Alpha'
+                'name' => 'Alpha',
+                  'options' => array(
+                  'min' => 3,
+                  'max' => 64
+                )
               )
             ), 
         ])); 
@@ -68,7 +72,11 @@ class EmployeeValidator implements InputFilterAwareInterface
             ), 
             'validators' => array( 
               array(
-                'name' => 'Alpha'
+                'name' => 'Alpha',
+                'options' => array(
+                    'min' => 3,
+                    'max' => 64
+                )                  
               )
             ), 
         ])); 
@@ -111,7 +119,7 @@ class EmployeeValidator implements InputFilterAwareInterface
               array(
                 'name' => 'StringLength',
                 'options' => array(
-                  'min' => 6
+                  'min' => 5
                 )
               )
                  

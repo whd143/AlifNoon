@@ -304,9 +304,15 @@ class EmployeeController extends AbstractActionController
       $form->setData($employee);
 
       if ($form->isValid()) {
-
+        try {
         $employeeModel->exchangeArray($form->getData());
         $this->getEmployeeTable()->save($employeeModel);
+        } catch (\Admin\Exception $e) {
+            return new ViewModel(array(
+            "form" => $form,
+            "error" => $e->getMessage(),
+          ));
+        }
 
         // working on it
         /*$this->getRoleTable()->deleteEmployeeRoles($employeeModel->getEmployeeID());
@@ -314,7 +320,7 @@ class EmployeeController extends AbstractActionController
 
         return new ViewModel(array(
           "form" => $form,
-          "message" => "employee saved",
+          "message" => "Employee Saved!",
         ));
         /*return new JsonModel(array(
           "message" => "employee saved"
@@ -322,10 +328,14 @@ class EmployeeController extends AbstractActionController
       }
       else 
       {
-        throw new \Admin\Exception\InvalidArgumentException(
+        /*throw new \Admin\Exception\InvalidArgumentException(
           "Invalid Arguments", 
           $form->getMessages()
-        );
+        );*/
+        return new ViewModel(array(
+            "form" => $form,
+            "errors" => $form->getMessages(),
+          ));
       }
     } else {
       //throw new \Admin\Exception\WrongMethodException();

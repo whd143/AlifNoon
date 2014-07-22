@@ -1,4 +1,14 @@
 <div class="no-right-bar">
+    <script type="text/javascript">
+       $(document).ready( function () {
+        $('#dtable').dataTable( {
+            "dom": 'T<"clear">lfrtip',
+            "tableTools": {
+                "sSwfPath": "/theme/js/include/asset/DT/swf/copy_csv_xls_pdf.swf"
+            }
+        } );
+    } );
+    </script>
 <!-- main content -->
 <div id="page-content">
     <?php
@@ -8,10 +18,10 @@
          <h1 id="page-header"><?php echo $this->escapeHtml($title); ?></h1>
     <div class="fluid-container">
         <section class="" id="widget-grid">
-        <div class="row-fluid">
-            <article class="span12 sortable-grid ui-sortable">
+        <div class="row">
+            <article class="col-md-12 sortable-grid ui-sortable">
                 <div id="widget-id-0" class="jarviswidget jarviswidget-sortable" role="widget">
-                    <header role="heading" style="display: block;">
+                    <header role="heading">
                         <h5><a href="/admin/employee/add">Add Employee</a></h5>                           
                     </header>
                 <div role="content" style="display: block;">

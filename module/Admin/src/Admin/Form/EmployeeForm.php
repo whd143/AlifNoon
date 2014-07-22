@@ -11,6 +11,7 @@ class EmployeeForm extends Form
         parent::__construct(''); 
         
         $this->setAttribute('method', 'post'); 
+        $this->setAttribute('id', "validate-demo-js");
         
         $this->add(array( 
             'name' => 'employee_id', 

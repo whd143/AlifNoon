@@ -84,6 +84,7 @@ if (!ismobile) {
     /** ONLY EXECUTE THESE CODES IF MOBILE DETECTION IS TRUE **/
 
     document.write('<script src="/theme/js/include/selectnav.min.js"><\/script>');
+    document.write('<script src="/theme/js/include/responsive-tables.min.js"><\/script>');
 }
 </script>
 

@@ -1,3 +1,4 @@
+<div class="no-right-bar">
 <!-- main content -->
 <div id="page-content">
 <?php
@@ -5,8 +6,20 @@ $title = 'Departments';
  $this->headTitle($title);
  ?>
  <h1 id="page-header"><?php echo $this->escapeHtml($title); ?></h1>
-<a href="/admin/department/add">Add Department</a>
-<table class="table">
+ <div class="fluid-container">
+        <section class="" id="widget-grid">
+        <div class="row">
+            <article class="col-md-12 sortable-grid ui-sortable">
+                <div id="widget-id-1" class="jarviswidget jarviswidget-sortable" role="widget">
+                    <header role="heading">
+                        <h5><a href="/admin/department/add">Add Department</a></h5>                           
+                    </header>
+                <div role="content" style="display: block;">
+                    <div class="inner-spacer">
+
+
+<table id="dtable" class="table table-striped table-bordered responsive dataTable" aria-describedby="dtable_info">
+
  <tr>     
      <th>department id</th>
      <th>title</th>     
@@ -31,6 +44,13 @@ $title = 'Departments';
  </tr>
  <?php endforeach; ?>
  </table>
-		
+ </div>
+                </div>
+                </div>
+            </article>
+        </div>
+        </section>
+    </div>		
 </div>
 <!-- end main content -->
+</div>
