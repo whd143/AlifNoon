@@ -2,7 +2,7 @@
 <!-- main content -->
 <div id="page-content">
 <?php
-$title = 'Departments';
+$title = 'Department Management';
  $this->headTitle($title);
  ?>
  <h1 id="page-header"><?php echo $this->escapeHtml($title); ?></h1>
@@ -21,11 +21,9 @@ $title = 'Departments';
 <table id="dtable" class="table table-striped table-bordered responsive dataTable" aria-describedby="dtable_info">
     <thead
         <tr>     
-            <th>department id</th>
-            <th>title</th>     
-            <th>is active</th>
-            <th>date created</th>
-            <th>date modified</th>
+            <th>Department ID</th>
+            <th>Title</th>     
+            <th>Status</th>            
         </tr>
     </thead>
     <tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -34,15 +32,7 @@ $title = 'Departments';
         <td><?php echo $this->escapeHtml($department['department_id']);?></td>
 
         <td><a href="/admin/department/update/<?php echo $this->escapeHtml($department['department_id']);?>"><?php echo $this->escapeHtml($department['title']);?></a></td>          
-        <td><?php echo ($this->escapeHtml($department['is_active'])) ? 'active' : 'non-active'; ?></td>
-        <td><?php echo $this->escapeHtml($department['date_created']);?></td>
-        <td><?php echo $this->escapeHtml($department['date_modified']); ?></td>
-        <?php /*<td><a href="<?php echo $this->url('admin/employees',
-           array('action'=>'update', 'id' => $employee->employee_id));?>">Edit</a>
-           <a href="<?php echo $this->url('admin/employees',
-           array('action'=>'delete', 'id' => $employee->employee_id));?>">Delete</a>      </td>
-           */
-        ?>
+        <td><?php echo ($this->escapeHtml($department['is_active'])) ? 'active' : 'non-active'; ?></td>        
     </tr>
     <?php endforeach; ?>
     </tbody>

@@ -12,6 +12,7 @@ class EmployeeForm extends Form
         
         $this->setAttribute('method', 'post'); 
         $this->setAttribute('id', "validate-demo-js");
+        $this->setAttribute('class', 'form-horizontal themed');
         
         $this->add(array( 
             'name' => 'employee_id', 
@@ -48,7 +49,8 @@ class EmployeeForm extends Form
             'name' => 'department_id', 
             'type' => 'Zend\Form\Element\Select', 
             'attributes' => array( 
-                'required' => 'required',               
+                'required' => 'required',
+                'class' => 'with-search',
             ),
             'options' => array(
                  'label' => 'Departments',
@@ -61,6 +63,7 @@ class EmployeeForm extends Form
             'attributes' => array( 
                 'required' => 'required',                
                 'maxlength' => 64,
+                'class' => 'form-control',
             ),
             'options' => array(
                  'label' => 'First Name',
@@ -73,6 +76,7 @@ class EmployeeForm extends Form
             'attributes' => array( 
                 'required' => 'required',                
                 'maxlength' => 64,
+                'class' => 'form-control',
             ),
             'options' => array(
                  'label' => 'Last Name',
@@ -84,7 +88,8 @@ class EmployeeForm extends Form
             'type' => 'Zend\Form\Element\Email', 
             'attributes' => array( 
                 'placeholder' => 'Email Address...', 
-                'required' => 'required', 
+                'required' => 'required',
+                'class' => 'form-control',
             ),
             'options' => array(
                  'label' => 'Email',
@@ -95,7 +100,8 @@ class EmployeeForm extends Form
             'name' => 'password', 
             'type' => 'Zend\Form\Element\Password', 
             'attributes' => array( 
-                'required' => 'required', 
+                'required' => 'required',
+                'class' => 'form-control',
             ),
             'options' => array(
                  'label' => 'Password',
@@ -105,8 +111,7 @@ class EmployeeForm extends Form
         $this->add(array( 
             'name' => 'is_active', 
             'type' => 'Zend\Form\Element\Checkbox', 
-            'attributes' => array( 
-                'required' => 'required', 
+            'attributes' => array(                
             ),
             'options' => array(
                  'label' => 'Active?',
@@ -119,6 +124,7 @@ class EmployeeForm extends Form
             'attributes' => array( 
                 'required' => 'required',
                 'maxlength' => 64,
+                'class' => 'form-control',
             ), 
             'options' => array(
                  'label' => 'Dashboard',
@@ -129,8 +135,7 @@ class EmployeeForm extends Form
         $this->add(array( 
             'name' => 'is_driver', 
             'type' => 'Zend\Form\Element\Checkbox', 
-            'attributes' => array( 
-                'required' => 'required', 
+            'attributes' => array(               
             ),
             'options' => array(
                  'label' => 'Driver?',
