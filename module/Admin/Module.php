@@ -14,12 +14,6 @@ use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
-use Zend\View\Model\JsonModel;
-use \Admin\Helper\ErrorLog;
-use Zend\Permissions\Acl\Acl;
-use Zend\Permissions\Acl\Role\GenericRole as Role;
-use Zend\Permissions\Acl\Resource\GenericResource as Resource;
-use \Admin\Model\AuthService;
 
 class Module {
 
@@ -44,92 +38,6 @@ class Module {
             $controller->layout('layout/admin-layout');
         });
     }
-
-    public function getEmployeeTable($sm) {
-        if (!$this->employeeTable)
-            $this->employeeTable = $sm->get('Admin\Gateway\EmployeeTable');
-        return $this->employeeTable;
-    }
-
-    public function getEmployeeSessionTable($sm) {
-        if (!$this->employeeSessionTable)
-            $this->employeeSessionTable = $sm->get('Admin\Gateway\EmployeeSessionTable');
-        return $this->employeeSessionTable;
-    }
-
-    public function getRoleTable($sm) {
-        if (!$this->roleTable)
-            $this->roleTable = $sm->get('Admin\Gateway\RoleTable');
-        return $this->roleTable;
-    }
-
-    public function getResourceTable($sm) {
-        if (!$this->resourceTable)
-            $this->resourceTable = $sm->get('Admin\Gateway\ResourceTable');
-        return $this->resourceTable;
-    }
-
-    /*
-      public function onDispatch($e) {
-
-      $request      = $e->getRequest();
-      $headers      = $request->getHeaders();
-      $routeName    = $e->getRouteMatch()->getMatchedRouteName();
-
-      $openRoutes   = array(
-      'admin/login',
-      'admin/login/check',
-      'admin/login/recover'
-      );
-
-
-
-      if ($headers->has('Authorization')) {
-      $token = $headers->get('Authorization')->getFieldValue();
-      try {
-
-      $sm               = $e->getApplication()->getServiceManager();
-      $employeeSession  = $this->getEmployeeSessionTable($sm)
-      ->getEmployeeByToken($token);
-
-      $this->employee   = $this->getEmployeeTable($sm)
-      ->getEmployee($employeeSession->getEmployeeID());
-
-      $aclService = $e->getApplication()->getServiceManager()->get('AclService');
-      //$aclService->check($e->getRouteMatch());
-      } catch( \Admin\Exception $exception) {
-
-      // no session or no employee
-
-      $response = $e->getResponse();
-      $response->setStatusCode($exception->getStatus());
-
-      $jsonModel = new JsonModel(array(
-      'errors' => array($exception->getMessage())
-      ));
-      $e->setResult($jsonModel);
-      $e->setViewModel($jsonModel);
-
-      }
-
-      } // no token in headers
-      else {
-      if (!in_array($routeName, $openRoutes)) {
-      $exception = new \Admin\Exception\TokenException();
-      $response = $e->getResponse();
-      $response->setStatusCode($exception->getStatus());
-
-      $jsonModel = new JsonModel(array(
-      'errors' => array($exception->getMessage())
-      ));
-      $e->setResult($jsonModel);
-      $e->setViewModel($jsonModel);
-      } else {
-      // trying to login and have yet gotten a token from the server
-      }
-      }
-
-      } */
 
     public function onRenderError($e) {
         return $this->onDispatchError($e);
@@ -175,91 +83,6 @@ class Module {
         return $model;
     }
 
-    /*
-
-
-      public function initACL(MvcEvent $e) {
-      $acl    = new Acl();
-
-      $sm             = $e->getApplication()->getServiceManager();
-      $roleTable      = $this->getRoleTable($sm);
-      $resourceTable  = $this->getResourceTable($sm);
-
-      $roles = $roleTable->getRoles();
-      foreach($roles as $role)
-      $acl->addRole(new Role($role['title']));
-
-      $resources = $resourceTable->getResources();
-      foreach($resources as $resource)
-      if (!$acl->hasResource($resource['namespace']))
-      $acl->addResource(new Resource($resource['namespace']));
-
-      foreach($roles as $role) {
-      $roleResources = $resourceTable->getResourcesByRole($role['role_id']);
-
-      foreach($roleResources as $resource)
-      $acl->allow($role['title'], $resource['namespace']);
-      }
-
-      $this->acl = $acl;
-
-      $this->checkACL($e);
-      }
-
-
-      public function checkACL(MvcEvent $e) {
-      $sm             = $e->getApplication()->getServiceManager();
-      $roleTable      = $this->getRoleTable($sm);
-      $resourceTable  = $this->getResourceTable($sm);
-
-      $authedEmployee = $sm->get('AuthedEmployeeService');
-      $employee       = $authedEmployee->getEmployee();
-
-      $userRoles      = $roleTable->getRolesByEmployeeID($employee->getEmployeeID());
-      $roles          = array_filter($roleTable->getRoles(),function($role) {
-      return $role['is_active'];
-      });
-
-      $routeName      = $e->getRouteMatch()->getMatchedRouteName();
-
-
-      $matches = array();
-      preg_match_all("/[a-zA-Z]+/", $routeName, $matches);
-      ErrorLog::log($matches);
-      ErrorLog::log($routeName);
-      exit;
-
-      $acl            = $this->acl;
-
-      $isAllowed      = array_map(function($userRole) use ($acl, $routeName) {
-      if (!$acl->hasResource($routeName)) return false;
-      return $acl->isAllowed($userRole['title'], $routeName);
-      }, $userRoles);
-
-      ErrorLog::log($routeName);
-      ErrorLog::log(in_array(false, $isAllowed));
-      ErrorLog::log($isAllowed);
-
-      //$config = $sm->get('Config');
-      //$routes = $config['router']['routes']
-
-
-
-      if(in_array(false, $isAllowed)) {
-      $exception = new \Admin\Exception\NotAuthorizedException();
-      $response = $e->getResponse();
-      $response->setStatusCode($exception->getStatus());
-
-      $jsonModel = new JsonModel(array(
-      'errors' => array($exception->getMessage())
-      ));
-      $e->setResult($jsonModel);
-      $e->setViewModel($jsonModel);
-      }
-
-      }
-     */
-
     public function getConfig() {
         return include __DIR__ . '/config/module.config.php';
     }
@@ -277,34 +100,6 @@ class Module {
     public function getServiceConfig() {
         return array(
             'factories' => array(
-                'AclService' => function($sm) {
-            $aclService = new \Admin\Service\Acl();
-            $aclService->setServiceLocator($sm);
-            $aclService->init();
-            return $aclService;
-        },
-                'AuthedEmployeeService' => function($sm) {
-            $authedEmployee = new \Admin\Service\AuthedEmployee();
-            $authedEmployee->setServiceLocator($sm);
-            $authedEmployee->init();
-            return $authedEmployee;
-        },
-                'SystemEmailService' => function($sm) {
-            $systemEmail = new \Admin\Service\SystemEmail();
-            $systemEmail->setServiceLocator($sm);
-            return $systemEmail;
-        },
-                'Admin\Model\OrderTable' => function($sm) {
-            $tableGateway = $sm->get('OrderTableGateway');
-            $table = new \Admin\Model\OrderTable($tableGateway);
-            return $table;
-        },
-                'OrderTableGateway' => function ($sm) {
-            $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-            $resultSetPrototype = new ResultSet();
-            $resultSetPrototype->setArrayObjectPrototype(new \Admin\Model\Order());
-            return new TableGateway('order', $dbAdapter, null, $resultSetPrototype);
-        },
                 'Admin\Gateway\EmployeeTable' => function($sm) {
             $tableGateway = $sm->get('EmployeeTableGateway');
             $table = new \Admin\Gateway\EmployeeTable($tableGateway);
@@ -348,28 +143,6 @@ class Module {
             $resultSetPrototype = new ResultSet();
             $resultSetPrototype->setArrayObjectPrototype(new \Admin\Model\Department());
             return new TableGateway('department', $dbAdapter, null, $resultSetPrototype);
-        },
-                'Admin\Model\UserTable' => function($sm) {
-            $tableGateway = $sm->get('AdminUserTableGateway');
-            $table = new \Admin\Model\UserTable($tableGateway);
-            return $table;
-        },
-                'AdminUserTableGateway' => function ($sm) {
-            $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-            $resultSetPrototype = new ResultSet();
-            $resultSetPrototype->setArrayObjectPrototype(new \Admin\Model\User());
-            return new TableGateway('user', $dbAdapter, null, $resultSetPrototype);
-        },
-                'Admin\Gateway\EmployeeSessionTable' => function($sm) {
-            $tableGateway = $sm->get('EmployeeSessionTableGateway');
-            $table = new \Admin\Gateway\EmployeeSessionTable($tableGateway);
-            return $table;
-        },
-                'EmployeeSessionTableGateway' => function ($sm) {
-            $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-            $resultSetPrototype = new ResultSet();
-            $resultSetPrototype->setArrayObjectPrototype(new \Admin\Model\EmployeeSession());
-            return new TableGateway('employee_session', $dbAdapter, null, $resultSetPrototype);
         },
             )
         );
