@@ -27,7 +27,10 @@ class Module {
          */
         $sharedEventManager = $eventManager->getSharedManager(); /* The shared event manager */
         $sharedEventManager->attach(__NAMESPACE__, MvcEvent::EVENT_DISPATCH, function($e) {
-            $controller = $e->getTarget();/** The controller which is dispatched */
+            /**
+             * The controller which is dispatched 
+             */
+            $controller = $e->getTarget();
             $controllerName = $controller->getEvent()->getRouteMatch()->getParam('controller');
             if (!in_array($controllerName, array('Authentication\Controller\Index',
                     ))) {
@@ -44,7 +47,6 @@ class Module {
              */
             $controller = $event->getTarget(); /* The controller which is dispatched */
             $controllerName = $controller->getEvent()->getRouteMatch()->getParam('controller');
-            //$event->getRouteMatch()->getMatchedRouteName() === 'authentication'
             /**
              * If user session is available then simply redirect the user to dashboard, while 
              * He is trying to access the unrestriced area like login/forgot password pages
@@ -102,17 +104,17 @@ class Module {
             'aliases' => array(),
             'factories' => array(
                 // DB
-        /*'EmployeeTable' => function($sm) {
+                'EmployeeTable' => function($sm) {
             $tableGateway = $sm->get('EmployeeTableGateway');
             $table = new \Authentication\Gateway\EmployeeTable($tableGateway);
             return $table;
         },
-        'EmployeeTableGateway' => function ($sm) {
+                'EmployeeTableGateway' => function ($sm) {
             $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
             $resultSetPrototype = new ResultSet();
             $resultSetPrototype->setArrayObjectPrototype(new \Authentication\Model\Employee());
             return new TableGateway('employee', $dbAdapter, null, $resultSetPrototype);
-        }*/
+        },
             ),
             'invokables' => array(),
             'services' => array(),
