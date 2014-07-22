@@ -62,7 +62,7 @@ class Module
     $sharedEventManager->attach(__NAMESPACE__, MvcEvent::EVENT_DISPATCH, function($e) {
         $controller = $e->getTarget();/** The controller which is dispatched */
         $controllerName = $controller->getEvent()->getRouteMatch()->getParam('controller');
-        if (!in_array($controllerName, array('Admin\Controller\Index',
+        if (!in_array($controllerName, array('Authentication\Controller\Index',
                 ))) {
             $controller->layout('layout/admin-layout');
         }
@@ -82,7 +82,7 @@ class Module
          * If user session is available then simply redirect the user to dashboard, while 
          * He is trying to access the unrestriced area like login/forgot password pages
          */
-        if ($controllerName == "Admin\Controller\Index") {
+        if ($controllerName == "Authentication\Controller\Index") {
             $response = $event->getResponse();
             if ($event->getApplication()->getServiceManager()->get('AuthService')->isAuthenticated() === true) {
                 $response->getHeaders()->clearHeaders()->addHeaderLine('Location', '/admin/dashboard');

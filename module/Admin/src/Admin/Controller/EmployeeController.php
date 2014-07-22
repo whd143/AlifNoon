@@ -114,7 +114,13 @@ class EmployeeController extends AbstractActionController
      $dep_options = array();
      foreach($departments as $department) {
         $dep_options[$department['department_id']] = $department['title'];
-     }     
+     } 
+     
+     $roles = $this->getRoleTable()->getRoles();
+     $role_options = array();
+     foreach($roles as $role) {
+         $role_options[$role['role_id']] = $role['title'];
+     }            
      
      if (!$employee_id) {
         return $this->redirect()->toRoute('admin/employee/add', array(
@@ -122,7 +128,7 @@ class EmployeeController extends AbstractActionController
         ));
      }
      
-     // Get the Album with the specified id.  An exception is thrown
+     
      // if it cannot be found, in which case go to the index page.
      try {
         $employee = $this->getEmployeeTable()->getEmployee($employee_id);
@@ -139,6 +145,9 @@ class EmployeeController extends AbstractActionController
     $form = new EmployeeForm();
     //echo '<pre>'; print_r($employee); echo '<pre>'; die('here');
     $form->get('department_id')->setAttribute('options', $dep_options);
+    $element = $form->get('roles');
+    $element->setValueOptions($role_options);
+    
     $form->bind($employee);    
     $form->get('submit')->setAttribute('value', 'Edit');
 
@@ -270,14 +279,22 @@ class EmployeeController extends AbstractActionController
         $dep_options[$department['department_id']] = $department['title'];
     }
     $form->get('department_id')->setAttribute('options', $dep_options);
+    
+    $roles = $this->getRoleTable()->getRoles();
+    $role_options = array();
+    foreach($roles as $role) {
+        $role_options[$role['role_id']] = $role['title'];
+    }       
+    $element = $form->get('roles');
+    $element->setValueOptions($role_options);
 
     if ($this->getRequest()->isPost()) {
       //$post = json_decode($this->getRequest()->getContent());
       $post = $this->getRequest()->getPost();
-      //echo '<pre>';      print_r($post); echo '</pre>';
+      //echo '<pre>';      print_r($post); echo '</pre>'; die('here');
 
       $employee      = $post;
-      $employeeRoles = (array)$post['roles']; 
+      $employeeRoles = $post['roles']; 
       //echo '<pre>';      print_r($employeeRoles); echo '</pre>';
 
       $employeeModel      = new Employee();
@@ -291,12 +308,13 @@ class EmployeeController extends AbstractActionController
         $employeeModel->exchangeArray($form->getData());
         $this->getEmployeeTable()->save($employeeModel);
 
-
-        $this->getRoleTable()->deleteEmployeeRoles($employeeModel->getEmployeeID());
-        $this->getRoleTable()->addEmployeeRoles($employeeModel->getEmployeeID(), $employeeRoles);
+        // working on it
+        /*$this->getRoleTable()->deleteEmployeeRoles($employeeModel->getEmployeeID());
+        $this->getRoleTable()->addEmployeeRoles($employeeModel->getEmployeeID(), $employeeRoles);*/
 
         return new ViewModel(array(
-          "message" => "employee saved"
+          "form" => $form,
+          "message" => "employee saved",
         ));
         /*return new JsonModel(array(
           "message" => "employee saved"

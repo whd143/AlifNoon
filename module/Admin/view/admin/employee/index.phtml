@@ -1,44 +1,59 @@
+<div class="no-right-bar">
 <!-- main content -->
 <div id="page-content">
-<?php
-$title = 'Employees';
- $this->headTitle($title);
- ?>
- <h1 id="page-header"><?php echo $this->escapeHtml($title); ?></h1>
-<a href="/admin/employee/add">Add Employee</a>
-<table class="table" style="font-size: 11px;">
- <tr>
-     <th>employee id</th>
-     <th>department id</th>
-     <th>first name</th>
-     <th>last name</th>
-     <th>email</th>
-     <th>password</th>
-     <th>is active</th>
-     <th>dashboard</th>
-     <th>is driver</th>
- </tr>
- <?php foreach ($employees as $employee) : ?>
- <tr>
-     <td><?php echo $this->escapeHtml($employee['employee_id']);?></td>
-     <td><?php echo $this->escapeHtml($employee['department_id']);?></td>
-     
-     <td><a href="/admin/employee/update/<?php echo $this->escapeHtml($employee['employee_id']);?>"><?php echo $this->escapeHtml($employee['first_name']);?></a></td>
-     <td><a href="/admin/employee/update/<?php echo $this->escapeHtml($employee['employee_id']);?>"><?php echo $this->escapeHtml($employee['last_name']);?></a></td>
-     <td><?php echo $this->escapeHtml($employee['email']);?></td>
-     <td><?php echo $this->escapeHtml($employee['password']);?></td>
-     <td><?php echo ($this->escapeHtml($employee['is_active'])) ? 'active' : 'non-active'; ?></td>
-     <td><?php echo $this->escapeHtml($employee['dashboard']);?></td>
-     <td><?php echo ($this->escapeHtml($employee['is_driver'])) ? 'true' : 'false'; ?></td>
-     <?php /*<td><a href="<?php echo $this->url('admin/employees',
-        array('action'=>'update', 'id' => $employee->employee_id));?>">Edit</a>
-        <a href="<?php echo $this->url('admin/employees',
-        array('action'=>'delete', 'id' => $employee->employee_id));?>">Delete</a>      </td>
-        */
-     ?>
- </tr>
- <?php endforeach; ?>
+    <?php
+        $title = 'Employees Managment';
+         $this->headTitle($title);
+    ?>
+         <h1 id="page-header"><?php echo $this->escapeHtml($title); ?></h1>
+    <div class="fluid-container">
+        <section class="" id="widget-grid">
+        <div class="row-fluid">
+            <article class="span12 sortable-grid ui-sortable">
+                <div id="widget-id-0" class="jarviswidget jarviswidget-sortable" role="widget">
+                    <header role="heading" style="display: block;">
+                        <h5><a href="/admin/employee/add">Add Employee</a></h5>                           
+                    </header>
+                <div role="content" style="display: block;">
+                    <div class="inner-spacer">
+
+
+<table id="dtable" class="table table-striped table-bordered responsive dataTable" aria-describedby="dtable_info">
+    <thead>
+        <tr>
+            <th>employee id</th>
+            <th>department id</th>
+            <th>first name</th>
+            <th>last name</th>
+            <th>email</th>            
+            <th>is active</th>
+            <th>dashboard</th>
+            <th>is driver</th>
+        </tr>
+    </thead>
+    <tbody role="alert" aria-live="polite" aria-relevant="all">
+        <?php foreach ($employees as $employee) : ?>
+        <tr>
+            <td><?php echo $this->escapeHtml($employee['employee_id']);?></td>
+            <td><?php echo $this->escapeHtml($employee['department_id']);?></td>
+
+            <td><a href="/admin/employee/update/<?php echo $this->escapeHtml($employee['employee_id']);?>"><?php echo $this->escapeHtml($employee['first_name']);?></a></td>
+            <td><a href="/admin/employee/update/<?php echo $this->escapeHtml($employee['employee_id']);?>"><?php echo $this->escapeHtml($employee['last_name']);?></a></td>
+            <td><?php echo $this->escapeHtml($employee['email']);?></td>            
+            <td><?php echo ($this->escapeHtml($employee['is_active'])) ? 'active' : 'non-active'; ?></td>
+            <td><?php echo $this->escapeHtml($employee['dashboard']);?></td>
+            <td><?php echo ($this->escapeHtml($employee['is_driver'])) ? 'true' : 'false'; ?></td>            
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
  </table>
-		
+                    </div>
+                </div>
+                </div>
+            </article>
+        </div>
+        </section>
+    </div>		
 </div>
 <!-- end main content -->
+</div>

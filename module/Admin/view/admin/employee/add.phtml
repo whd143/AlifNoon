@@ -6,6 +6,7 @@ $title = 'Add new Employee';
  ?>
   <h1 id="page-header"><?php echo $this->escapeHtml($title); ?></h1>
  <?php
+ echo $message;
  //echo '<pre>'; print_r($error); echo '</pre>';
  $form->setAttribute('action', $this->url('admin/employee/add', array('action' => 'add')));
  $form->prepare();

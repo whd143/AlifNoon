@@ -4735,3 +4735,10 @@ code {
     display: inline-block;
     min-width: 100px;
 }
+input.employee_roles {
+    margin-right: 10px;
+}
+a.delete-employee {
+    float: right;
+    margin-top: 49px;
+}
