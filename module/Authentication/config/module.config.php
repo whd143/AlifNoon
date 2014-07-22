@@ -20,10 +20,12 @@ return array(
                     ),
                 ),
             ),
-            // The following is a route to simplify getting started creating
-            // new controllers and actions without needing to create a new
-            // module. Simply drop new controllers in, and you can access them
-            // using the path /application/:controller/:action
+            /**
+             * The following is a route to simplify getting started creating new 
+             * controllers and actions without needing to create a new module. 
+             * Simply drop new controllers in, and you can access them using the 
+             * path /application/:controller/:action
+             */
             'admin' => array(
                 'type' => 'Literal',
                 'options' => array(
@@ -36,18 +38,6 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
-//                    'default' => array(
-//                        'type' => 'Segment',
-//                        'options' => array(
-//                            'route' => '/[:controller[/:action]]',
-//                            'constraints' => array(
-//                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-//                            ),
-//                            'defaults' => array(
-//                            ),
-//                        ),
-//                    ),
                     'logout' => array(
                         'type' => 'Segment',
                         'options' => array(
@@ -150,7 +140,9 @@ return array(
             'sender_email' => 'info@thefreshdiet.com'
         )
     ),
-    // Placeholder for console routes
+    /**
+     * Placeholder for console routes
+     */
     'console' => array(
         'router' => array(
             'routes' => array(
