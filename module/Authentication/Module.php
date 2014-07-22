@@ -102,7 +102,7 @@ class Module {
             'aliases' => array(),
             'factories' => array(
                 // DB
-        'EmployeeTable' => function($sm) {
+        /*'EmployeeTable' => function($sm) {
             $tableGateway = $sm->get('EmployeeTableGateway');
             $table = new \Authentication\Gateway\EmployeeTable($tableGateway);
             return $table;
@@ -112,7 +112,7 @@ class Module {
             $resultSetPrototype = new ResultSet();
             $resultSetPrototype->setArrayObjectPrototype(new \Authentication\Model\Employee());
             return new TableGateway('employee', $dbAdapter, null, $resultSetPrototype);
-        }
+        }*/
             ),
             'invokables' => array(),
             'services' => array(),

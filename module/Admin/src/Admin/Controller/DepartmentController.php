@@ -87,7 +87,7 @@ class DepartmentController extends AbstractActionController
          //echo '<pre>'; print_r($department); echo '<pre>'; die('here');
          $form->bind($department);
          
-         $form->get('submit')->setAttribute('value', 'Edit');
+         $form->get('submit')->setAttribute('value', 'Update');
          
 
          $request = $this->getRequest();

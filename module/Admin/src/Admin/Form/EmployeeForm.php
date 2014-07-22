@@ -59,7 +59,8 @@ class EmployeeForm extends Form
             'name' => 'first_name', 
             'type' => 'Zend\Form\Element\Text', 
             'attributes' => array( 
-                'required' => 'required', 
+                'required' => 'required',                
+                'maxlength' => 64,
             ),
             'options' => array(
                  'label' => 'First Name',
@@ -70,7 +71,8 @@ class EmployeeForm extends Form
             'name' => 'last_name', 
             'type' => 'Zend\Form\Element\Text', 
             'attributes' => array( 
-                'required' => 'required', 
+                'required' => 'required',                
+                'maxlength' => 64,
             ),
             'options' => array(
                  'label' => 'Last Name',
@@ -115,7 +117,8 @@ class EmployeeForm extends Form
             'name' => 'dashboard', 
             'type' => 'Zend\Form\Element\Text', 
             'attributes' => array( 
-                'required' => 'required', 
+                'required' => 'required',
+                'maxlength' => 64,
             ), 
             'options' => array(
                  'label' => 'Dashboard',
@@ -137,18 +140,11 @@ class EmployeeForm extends Form
         $this->add(array( 
             'name' => 'roles', 
             'type' => 'Zend\Form\Element\MultiCheckbox',
-            'attributes' => array( 
-                //'required' => 'required',
+            'attributes' => array(                 
                 'class' => 'employee_roles',
             ),
             'options' => array(
-                 'label' => 'Roles',
-                 //'checked_value' => '23',
-                /*'value_options' => array(
-                        '0' => 'Employee',
-                        '23' => 'Admin',
-                        '30' => 'Client',
-                ),*/
+                 'label' => 'Roles',                 
              ),
         ));
         

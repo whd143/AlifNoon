@@ -149,7 +149,7 @@ class EmployeeController extends AbstractActionController
     $element->setValueOptions($role_options);
     
     $form->bind($employee);    
-    $form->get('submit')->setAttribute('value', 'Edit');
+    $form->get('submit')->setAttribute('value', 'Update');
 
     if ($this->getRequest()->isPost()) {
         $post       = $this->getRequest()->getPost();
@@ -315,8 +315,15 @@ class EmployeeController extends AbstractActionController
         }
 
         // working on it
-        /*$this->getRoleTable()->deleteEmployeeRoles($employeeModel->getEmployeeID());
-        $this->getRoleTable()->addEmployeeRoles($employeeModel->getEmployeeID(), $employeeRoles);*/
+        try {
+            $this->getRoleTable()->deleteEmployeeRoles($employeeModel->getEmployeeID());
+            $this->getRoleTable()->addEmployeeRoles($employeeModel->getEmployeeID(), $employeeRoles);
+        } catch (\Exception $e) {
+            return new ViewModel(array(
+            "form" => $form,
+            "error" => $e->getMessage(),
+          ));
+        }
 
         return new ViewModel(array(
           "form" => $form,
