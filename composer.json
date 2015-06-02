@@ -1,12 +1,13 @@
 {
-    "name": "zendframework/skeleton-application",
-    "description": "Skeleton Application for ZF2",
+    "name": "zendframework/tfd-refactor",
+    "description": "Transition/Upgrading the TheFreshDiet website code-base into Zend Framework2",
     "license": "BSD-3-Clause",
     "keywords": [
         "framework",
-        "zf2"
+        "zf2",
+		"TheFreshDiet"
     ],
-    "homepage": "http://framework.zend.com/",
+    "homepage": "http://tfd-admin-frontend.waheed.malibu.thefreshdiet.com/",
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.3.*"

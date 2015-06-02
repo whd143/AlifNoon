@@ -14,7 +14,7 @@
 return array(
     'db' => array(
         'driver' => 'Pdo',
-        'dsn' => 'mysql:dbname=tfd_global_01;host=localhost',
+        'dsn' => 'mysql:dbname=tfd_refactor;host=localhost',
         'username' => 'root',
         'password' => '',
         'driver_options' => array(
